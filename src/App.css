@@ -1,0 +1,298 @@
+.app {
+  max-width: 640px;
+  margin: 0 auto;
+  min-height: 100svh;
+  padding: 16px 16px 96px;
+  position: relative;
+}
+
+.app-header {
+  padding: 12px 4px 20px;
+}
+
+.app-header h1 {
+  font-size: 24px;
+}
+
+.trip-summary {
+  margin-top: 4px;
+  color: var(--text);
+  font-size: 14px;
+}
+
+.empty-state {
+  text-align: center;
+  color: var(--text);
+  padding: 48px 16px;
+}
+
+.day-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.day-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.day-card-today {
+  border-color: var(--accent);
+  border-width: 2px;
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.day-card header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.day-card-date {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.today-tag {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent-contrast);
+  background: var(--accent);
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+
+.day-card-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 13px;
+  padding: 4px 6px;
+  cursor: pointer;
+}
+
+.icon-button.danger {
+  color: var(--danger);
+}
+
+.day-card h3 {
+  font-size: 17px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.activity-tag {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+
+.day-card-km {
+  font-size: 13px;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.overnight-block {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.maps-link {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.maps-link:active {
+  text-decoration: underline;
+}
+
+.status-badge {
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+
+.status-planned {
+  background: var(--status-planned-bg);
+  color: var(--status-planned-text);
+}
+.status-requested {
+  background: var(--status-requested-bg);
+  color: var(--status-requested-text);
+}
+.status-not-possible {
+  background: var(--status-not-possible-bg);
+  color: var(--status-not-possible-text);
+}
+.status-confirmed {
+  background: var(--status-confirmed-bg);
+  color: var(--status-confirmed-text);
+}
+
+.overnight-place {
+  color: var(--text);
+}
+
+.price {
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.amenities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.amenity-tag {
+  font-size: 12px;
+  background: var(--border);
+  color: var(--text);
+  border-radius: 6px;
+  padding: 2px 8px;
+}
+
+.highlights {
+  font-size: 14px;
+  color: var(--text);
+  white-space: pre-wrap;
+  margin-top: 4px;
+}
+
+.fab {
+  position: fixed;
+  right: 20px;
+  bottom: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font-size: 28px;
+  line-height: 1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 10;
+}
+
+.modal {
+  background: var(--card-bg);
+  width: 100%;
+  max-width: 640px;
+  max-height: 90svh;
+  overflow-y: auto;
+  border-radius: 16px 16px 0 0;
+  padding: 20px;
+}
+
+.day-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.day-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  flex: 1;
+}
+
+.day-form input,
+.day-form select,
+.day-form textarea {
+  font: inherit;
+  font-size: 16px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.form-row.checkboxes {
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.checkbox {
+  flex-direction: row !important;
+  align-items: center;
+  gap: 6px !important;
+}
+
+.checkbox input {
+  width: auto;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.form-actions button {
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: none;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.form-actions .secondary {
+  background: var(--border);
+  color: var(--text-h);
+}
