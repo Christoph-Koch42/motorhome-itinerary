@@ -1,54 +1,74 @@
 import { useEffect, useState } from 'react';
 import type { DayEntry } from './types';
-import { loadDays, saveDays, genId } from './storage';
+import { subscribeToDays, saveDay, deleteDay, genId } from './storage';
 import { todayStr, addOneDay } from './date';
+import { useAuthUser, signOutUser } from './auth';
+import LoginForm from './auth';
 import DayCard from './DayCard';
 import DayForm from './DayForm';
 import './App.css';
 
 export default function App() {
-  const [days, setDays] = useState<DayEntry[]>(() => loadDays());
+  const { user, loading: authLoading } = useAuthUser();
+  const [days, setDays] = useState<DayEntry[]>([]);
+  const [daysLoading, setDaysLoading] = useState(true);
   const [editing, setEditing] = useState<DayEntry | null>(null);
   const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
-    saveDays(days);
-  }, [days]);
+    if (!user) return;
+    setDaysLoading(true);
+    const unsubscribe = subscribeToDays((loaded) => {
+      setDays(loaded);
+      setDaysLoading(false);
+    });
+    return unsubscribe;
+  }, [user]);
+
+  if (authLoading) {
+    return <div className="app-loading">Loading…</div>;
+  }
+
+  if (!user) {
+    return <LoginForm />;
+  }
 
   const sortedDays = [...days].sort((a, b) => a.date.localeCompare(b.date));
 
+  // Writes are fire-and-forget: Firestore's offline cache applies them to
+  // the local view immediately and syncs to the server once back online,
+  // so the UI shouldn't block waiting for a network round-trip.
   const handleSave = (day: DayEntry) => {
-    setDays((prev) => {
-      const exists = prev.some((d) => d.id === day.id);
-      return exists
-        ? prev.map((d) => (d.id === day.id ? day : d))
-        : [...prev, day];
-    });
+    saveDay(day).catch(console.error);
     setShowForm(false);
     setEditing(null);
   };
 
   const handleDelete = (id: string) => {
     if (confirm('Delete this day?')) {
-      setDays((prev) => prev.filter((d) => d.id !== id));
+      deleteDay(id).catch(console.error);
     }
   };
 
   const handleCopy = (day: DayEntry) => {
-    setDays((prev) => [
-      ...prev,
-      { ...day, id: genId(), date: addOneDay(day.date) },
-    ]);
+    saveDay({ ...day, id: genId(), date: addOneDay(day.date) }).catch(
+      console.error,
+    );
   };
 
   const today = todayStr();
-
   const totalKm = sortedDays.reduce((sum, d) => sum + (d.km ?? 0), 0);
 
   return (
     <div className="app">
       <header className="app-header">
-        <h1>Motorhome Itinerary</h1>
+        <div className="app-header-top">
+          <h1>Motorhome Itinerary</h1>
+          <button className="icon-button" onClick={() => signOutUser()}>
+            Sign out
+          </button>
+        </div>
+        <p className="signed-in-as">Signed in as {user.email}</p>
         {sortedDays.length > 0 && (
           <p className="trip-summary">
             {sortedDays.length} day{sortedDays.length !== 1 ? 's' : ''} ·{' '}
@@ -73,7 +93,9 @@ export default function App() {
       )}
 
       <main>
-        {sortedDays.length === 0 ? (
+        {daysLoading ? (
+          <p className="empty-state">Loading itinerary…</p>
+        ) : sortedDays.length === 0 ? (
           <p className="empty-state">
             No days yet. Add your first day of the trip.
           </p>

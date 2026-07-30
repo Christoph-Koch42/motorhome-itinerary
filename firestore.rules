@@ -1,0 +1,12 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /days/{dayId} {
+      allow read, write: if request.auth != null
+        && request.auth.token.email in [
+          'stoeffel.koch@gmail.com',
+          'danni.wulan@gmail.com'
+        ];
+    }
+  }
+}
