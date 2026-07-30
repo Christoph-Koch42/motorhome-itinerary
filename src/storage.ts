@@ -17,10 +17,17 @@ export function genId(): string {
 // the shared trip data changes on either phone.
 export function subscribeToDays(onChange: (days: DayEntry[]) => void): () => void {
   return onSnapshot(collection(db, DAYS_COLLECTION), (snapshot) => {
-    const days = snapshot.docs.map((d) => ({
-      ...(d.data() as Omit<DayEntry, 'id'>),
-      id: d.id,
-    }));
+    const days = snapshot.docs.map((d) => {
+      const data = d.data() as Omit<DayEntry, 'id'>;
+      // Fill in fields added after some documents were already saved.
+      return {
+        ...data,
+        id: d.id,
+        time: data.time ?? '',
+        driveMinutes: data.driveMinutes ?? null,
+        documents: data.documents ?? [],
+      };
+    });
     onChange(days);
   });
 }

@@ -1,5 +1,6 @@
 import type { DayEntry } from './types';
 import { OVERNIGHT_TYPE_LABELS, BOOKING_STATUS_LABELS } from './types';
+import { minutesToHM } from './duration';
 
 interface DayCardProps {
   day: DayEntry;
@@ -30,7 +31,10 @@ export default function DayCard({
   ].filter(Boolean) as string[];
 
   return (
-    <article className={`day-card${isToday ? ' day-card-today' : ''}`}>
+    <article
+      id={`day-${day.id}`}
+      className={`day-card${isToday ? ' day-card-today' : ''}`}
+    >
       <header>
         <div className="day-card-date">
           {isToday && <span className="today-tag">Today</span>}
@@ -39,6 +43,7 @@ export default function DayCard({
             day: '2-digit',
             month: 'short',
           })}
+          {day.time && <span className="day-card-time">{day.time}</span>}
         </div>
         <div className="day-card-actions">
           <button className="icon-button" onClick={onCopy} aria-label="Copy">
@@ -64,7 +69,13 @@ export default function DayCard({
         {day.activityTitle || (day.activityType === 'travel' ? 'Travel day' : 'Stay')}
       </h3>
 
-      {day.km != null && <p className="day-card-km">{day.km} km</p>}
+      {(day.km != null || day.driveMinutes != null) && (
+        <p className="day-card-km">
+          {day.km != null && `${day.km} km`}
+          {day.km != null && day.driveMinutes != null && ' · '}
+          {day.driveMinutes != null && `${minutesToHM(day.driveMinutes)} driving`}
+        </p>
+      )}
 
       <div className="overnight-block">
         <span className={`status-badge ${statusClass[day.bookingStatus]}`}>
@@ -86,6 +97,23 @@ export default function DayCard({
           </a>
         )}
       </div>
+
+      {day.documents.length > 0 && (
+        <div className="document-list">
+          <span className="document-list-heading">Documents:</span>
+          {day.documents.map((doc) => (
+            <a
+              key={doc.id}
+              className="document-link"
+              href={doc.url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {doc.label || 'Document'}
+            </a>
+          ))}
+        </div>
+      )}
 
       {amenities.length > 0 && (
         <div className="amenities">

@@ -13,15 +13,24 @@ export type BookingStatus =
   | 'not_possible'
   | 'confirmed';
 
+export interface DocumentLink {
+  id: string;
+  label: string;
+  url: string;
+}
+
 export interface DayEntry {
   id: string;
   date: string; // ISO date, e.g. 2026-08-04
+  time: string; // optional "HH:MM", empty string if not set
   activityType: ActivityType;
   activityTitle: string;
   km: number | null;
+  driveMinutes: number | null;
   overnightPlace: string;
   overnightType: OvernightType;
   mapsLink: string;
+  documents: DocumentLink[];
   bookingStatus: BookingStatus;
   price: number | null;
   hookup: boolean;

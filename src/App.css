@@ -98,6 +98,17 @@
   font-size: 14px;
 }
 
+.header-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 6px;
+}
+
+.export-button {
+  padding: 4px 0;
+  font-weight: 600;
+}
+
 .empty-state {
   text-align: center;
   color: var(--text);
@@ -139,6 +150,11 @@
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+.day-card-time {
+  font-weight: 400;
+  opacity: 0.85;
 }
 
 .today-tag {
@@ -212,6 +228,28 @@
 
 .maps-link:active {
   text-decoration: underline;
+}
+
+.document-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.document-list-heading {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.document-link {
+  color: var(--text-h);
+  background: var(--border);
+  border-radius: 6px;
+  padding: 2px 8px;
+  text-decoration: none;
 }
 
 .status-badge {
@@ -318,7 +356,7 @@
   font-size: 13px;
   font-weight: 600;
   color: var(--text);
-  flex: 1;
+  flex: 1 1 120px;
 }
 
 .day-form input,
@@ -335,7 +373,50 @@
 
 .form-row {
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
+}
+
+.document-list-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.document-list-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.document-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.document-row input {
+  font: inherit;
+  font-size: 16px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+  flex: 1;
+  min-width: 0;
+}
+
+.document-list-editor > .secondary {
+  align-self: flex-start;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  background: var(--border);
+  color: var(--text-h);
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .form-row.checkboxes {

@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import type { DayEntry } from './types';
 import { subscribeToDays, saveDay, deleteDay, genId } from './storage';
 import { todayStr, addOneDay } from './date';
+import { minutesToHM } from './duration';
+import { downloadCsv } from './csv';
 import { useAuthUser, signOutUser } from './auth';
 import LoginForm from './auth';
 import DayCard from './DayCard';
@@ -33,7 +35,14 @@ export default function App() {
     return <LoginForm />;
   }
 
-  const sortedDays = [...days].sort((a, b) => a.date.localeCompare(b.date));
+  const sortedDays = [...days].sort((a, b) => {
+    const dateCmp = a.date.localeCompare(b.date);
+    if (dateCmp !== 0) return dateCmp;
+    if (!a.time && !b.time) return 0;
+    if (!a.time) return -1;
+    if (!b.time) return 1;
+    return a.time.localeCompare(b.time);
+  });
 
   // Writes are fire-and-forget: Firestore's offline cache applies them to
   // the local view immediately and syncs to the server once back online,
@@ -58,6 +67,17 @@ export default function App() {
 
   const today = todayStr();
   const totalKm = sortedDays.reduce((sum, d) => sum + (d.km ?? 0), 0);
+  const totalMinutes = sortedDays.reduce((sum, d) => sum + (d.driveMinutes ?? 0), 0);
+  const totalCost = sortedDays.reduce((sum, d) => sum + (d.price ?? 0), 0);
+
+  const scrollToToday = () => {
+    const target =
+      sortedDays.find((d) => d.date >= today) ?? sortedDays[sortedDays.length - 1];
+    if (!target) return;
+    document
+      .getElementById(`day-${target.id}`)
+      ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   return (
     <div className="app">
@@ -70,10 +90,24 @@ export default function App() {
         </div>
         <p className="signed-in-as">Signed in as {user.email}</p>
         {sortedDays.length > 0 && (
-          <p className="trip-summary">
-            {sortedDays.length} day{sortedDays.length !== 1 ? 's' : ''} ·{' '}
-            {totalKm} km total
-          </p>
+          <>
+            <p className="trip-summary">
+              {sortedDays.length} day{sortedDays.length !== 1 ? 's' : ''} ·{' '}
+              {totalKm} km · {minutesToHM(totalMinutes)} driving · €
+              {totalCost.toFixed(2)}
+            </p>
+            <div className="header-actions">
+              <button className="icon-button export-button" onClick={scrollToToday}>
+                Go to today
+              </button>
+              <button
+                className="icon-button export-button"
+                onClick={() => downloadCsv(sortedDays)}
+              >
+                Export CSV
+              </button>
+            </div>
+          </>
         )}
       </header>
 
